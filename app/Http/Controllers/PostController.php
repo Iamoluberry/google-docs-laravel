@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAddUserToPostRequest;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\PostUser;
 use App\Models\User;
@@ -18,7 +19,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        return Post::all();
+        return PostResource::collection(Post::paginate(10));
     }
 
     /**
@@ -51,7 +52,7 @@ class PostController extends Controller
             ], 404);
         }
 
-        return response()->json($post, 200);
+        return response()->json(new PostResource($post), 200);
     }
 
     /**

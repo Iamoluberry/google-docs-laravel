@@ -50,7 +50,7 @@ Route::group(['prefix' => '', 'middleware' => 'authenticateUser'], function () {
 Route::group(['prefix' => '', 'middleware' => 'authenticateUser'], function () {
     Route::get('/posts', [PostController::class, 'index'])->withoutMiddleware('authenticateUser')->middleware('permission:can-view-post');
     Route::post('/posts', [PostController::class, 'store'])->middleware('permission:can-add-post');
-    Route::get('/posts/{post}', [PostController::class, 'show'])->withoutMiddleware(['permission:can-view-post', 'authenticateUser']);
+    Route::get('/posts/{post}', [PostController::class, 'show'])->withoutMiddleware(['permission:can-view-post', 'authenticateUser'])->name('post.show');
     Route::put('/posts/{post}', [PostController::class, 'update'])->middleware(['permission:can-update-post', 'updatePost']);
     Route::post('/posts/add-user/{post}', [PostController::class, 'addUserToPost'])->middleware(['permission:can-add-user-to-post']);
     Route::delete('delete-post/{post}', [PostController::class, 'destroy'])->middleware(['permission:can-delete-post']);
@@ -60,7 +60,7 @@ Route::group(['prefix' => '', 'middleware' => 'authenticateUser'], function () {
 //comments
 Route::group(['prefix' => '', 'middleware' => 'authenticateUser'], function () {
     Route::get('/comments', [CommentController::class, 'index'])->middleware('adminRole');
-    Route::get('/comment/{post}', [CommentController::class, 'show']);
+    Route::get('/comment/{comment}', [CommentController::class, 'show']);
     Route::post('/comment/{post}', [CommentController::class, 'store'])->middleware('permission:can-create-comment');
     Route::put('/comment/{comment}', [CommentController::class, 'update'])->middleware(['permission:can-edit-comment', 'CanAlterComment']);
     Route::delete('/comment/{comment}', [CommentController::class, 'destroy'])->middleware(['permission:can-delete-comment', 'CanAlterComment']);

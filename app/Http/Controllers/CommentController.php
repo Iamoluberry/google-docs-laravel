@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
+use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        return Comment::all();
+        return CommentResource::collection(Comment::all());
     }
 
     /**
@@ -39,26 +40,10 @@ class CommentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Comment $comment, Post $post)
+    public function show(Comment $comment)
     {
-        $comments = $post->comments;
-
-        if (!$comments) {
-            return response()->json([
-                'message' => 'No comment found'
-            ], 404);
-        }
-
-        $commentsData = $comments->map(function ($comment) {
-            return [
-                'id' => $comment->id,
-                'text' => $comment->text,
-                'created_at' => $comment->created_at->toDateTimeString(),
-            ];
-        });
-
         return response()->json([
-            'data' => $commentsData,
+            'data' => new CommentResource($comment),
         ], 200);
     }
 
